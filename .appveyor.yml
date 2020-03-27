@@ -12,9 +12,10 @@ build:
   #- C:\Miniconda36-x64\pkgs
 environment:
   matrix:
-    - PYTHON_VERSION: 3.5
-      MINICONDA: C:\Miniconda35-x64
+    - PYTHON_VERSION: 3.7
+      MINICONDA: C:\Miniconda37-x64
       BUILD_MODE: Release
+
   fast_finish: true
 install:
 - ps: |
@@ -29,5 +30,9 @@ build_script:
 - cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .
 - set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%
-- setpath.bat
-- python -m pytest -v
+
+
+artifacts:
+  - path: "mitsuba*.whl"
+    name: Wheels
+
