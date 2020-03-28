@@ -50,3 +50,5 @@ init:
         '10.1' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
       }
 
+install:
+- ps: git submodule -q update --init --recursive

@@ -51,8 +51,7 @@ init:
       }
 
 install:
-- ps: |
-  git submodule -q update --init --recursive
+- ps: git submodule -q update --init --recursive
 - ps: |
     $env:PATH = "$env:MINICONDA;$env:MINICONDA\Scripts;$env:PATH"
     $env:PYTHONHOME = "$env:MINICONDA"
