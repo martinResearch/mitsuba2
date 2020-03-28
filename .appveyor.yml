@@ -68,8 +68,8 @@ build_script:
 - cmd: set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%
 - cmd: pip wheel . --wheel-dir=wheelhouse --no-deps
-- cmd: pip install twine
-- cmd: twine upload wheelhouse/*
+#- cmd: pip install twine
+#- cmd: twine upload wheelhouse/*
 
 
 
