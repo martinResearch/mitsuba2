@@ -57,7 +57,7 @@ install:
     $env:PYTHONHOME = "$env:MINICONDA"
     conda update -y -q conda
     conda install -y -q pytest numpy scipy
-
+- ps: appveyor DownloadFile -Url $env:url -FileName C:\cuda.exe
 - cmd: C:\cuda.exe %arguments%
 - set CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v%CUDA_VERSION%
 - set PATH=%CUDA_PATH%\bin;%PATH%
