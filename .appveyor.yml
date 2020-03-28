@@ -53,16 +53,16 @@ init:
       }
 
 install:
-- ps: |
+  - ps: |
     git submodule -q update --init --recursive
-- ps: |
+  - ps: |
       $env:PATH = "$env:MINICONDA;$env:MINICONDA\Scripts;$env:PATH"
       $env:PYTHONHOME = "$env:MINICONDA"
       conda update -y -q conda
       conda install -y -q pytest numpy scipy
   
 
-install:
+
   - ps: appveyor DownloadFile -Url $env:url -FileName C:\cuda.exe
   - cmd C:\cuda.exe %arguments%
   - set CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v%CUDA_VERSION%
