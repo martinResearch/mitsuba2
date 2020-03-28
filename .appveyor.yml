@@ -24,17 +24,6 @@ environment:
   TWINE_REPOSITORY_URL:  https://upload.pypi.org/legacy/
   TWINE_USERNAME: __token__
 
-install:
-- ps: |
-    git submodule -q update --init --recursive
-- ps: |
-      $env:PATH = "$env:MINICONDA;$env:MINICONDA\Scripts;$env:PATH"
-      $env:PYTHONHOME = "$env:MINICONDA"
-      conda update -y -q conda
-      conda install -y -q pytest numpy scipy
-
-  appveyor DownloadFile -Url https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda_9.2.148_win10  -FileName C:\cuda.exe
-  
 init:
   - ps: >-
       $env:url = switch ( $env:cuda_version )
@@ -62,6 +51,17 @@ init:
         '10.0' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
         '10.1' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
       }
+
+install:
+- ps: |
+    git submodule -q update --init --recursive
+- ps: |
+      $env:PATH = "$env:MINICONDA;$env:MINICONDA\Scripts;$env:PATH"
+      $env:PYTHONHOME = "$env:MINICONDA"
+      conda update -y -q conda
+      conda install -y -q pytest numpy scipy
+  
+
 install:
   - ps: appveyor DownloadFile -Url $env:url -FileName C:\cuda.exe
   - cmd C:\cuda.exe %arguments%
