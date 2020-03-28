@@ -13,11 +13,8 @@ environment:
   - PYTHON_VERSION: 3.7
     MINICONDA: C:\Miniconda37-x64
     BUILD_MODE: Release
-    CUDA_VERSION: '9.2'
-  - PYTHON_VERSION: 3.6
-    MINICONDA: C:\Miniconda36-x64
-    BUILD_MODE: Release
-    CUDA_VERSION: '9.2'
+    CUDA_VERSION: '9.0'
+
   fast_finish: true
   TWINE_REPOSITORY_URL:  https://upload.pypi.org/legacy/
   TWINE_USERNAME: __token__
@@ -57,6 +54,7 @@ install:
     $env:PYTHONHOME = "$env:MINICONDA"
     conda update -y -q conda
     conda install -y -q pytest numpy scipy
+# installing cuda, maybe could use conda install cudatoolkit=%CUDA_VERSION% instead
 - ps: appveyor DownloadFile -Url $env:url -FileName C:\cuda.exe
 - cmd: C:\cuda.exe %arguments%
 - set CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v%CUDA_VERSION%
