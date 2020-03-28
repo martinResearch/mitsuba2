@@ -15,7 +15,9 @@ environment:
     - PYTHON_VERSION: 3.7
       MINICONDA: C:\Miniconda37-x64
       BUILD_MODE: Release
-
+    - PYTHON_VERSION: 3.6
+      MINICONDA: C:\Miniconda36-x64
+      BUILD_MODE: Release
   fast_finish: true
 install:
 - ps: |
@@ -26,14 +28,15 @@ install:
       conda update -y -q conda
       conda install -y -q pytest numpy scipy
 build_script:
-- set PATH = "%MINICONDA%;%MINICONDA%\Scripts;%PATH%"
-- cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .
-- set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%
-- pip wheel .
+
+- cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+- cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .
+- cmd: set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%
+- cmd: pip wheel . --wheel-dir=wheelhouse --no-deps
 
 
 artifacts:
-  - path: "mitsuba*.whl"
+  - path: "wheelhouse\\*.whl"
     name: Wheels
 
