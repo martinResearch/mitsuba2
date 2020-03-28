@@ -36,10 +36,6 @@ install:
   appveyor DownloadFile -Url https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda_9.2.148_win10  -FileName C:\cuda.exe
   
 init:
-  - ps: systeminfo /fo csv | ConvertFrom-Csv | select OS*, System* | Format-List
-  - echo %APPVEYOR_BUILD_WORKER_IMAGE%
-  - echo %generator%
-  - echo %config%
   - ps: >-
       $env:url = switch ( $env:cuda_version )
       {
@@ -68,7 +64,7 @@ init:
       }
 install:
   - ps: appveyor DownloadFile -Url $env:url -FileName C:\cuda.exe
-  - C:\cuda.exe %arguments%
+  - cmd C:\cuda.exe %arguments%
   - set CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v%CUDA_VERSION%
   - set PATH=%CUDA_PATH%\bin;%PATH%
   - nvcc -V
