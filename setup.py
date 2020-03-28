@@ -6,8 +6,25 @@ import shutil
 
 libname = "mitsuba"
 
+# Force platform specific wheel, inpired from Open3D's setup.py
+try:
+    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+    # https://stackoverflow.com/a/45150383/1255535
+    class bdist_wheel(_bdist_wheel):
+        def finalize_options(self):
+            _bdist_wheel.finalize_options(self)
+            self.root_is_pure = False
+except ImportError:
+    print('Warning: cannot import "wheel" package to build platform-specific wheel')
+    print('Install the "wheel" package to fix this warning')
+    bdist_wheel = None
+cmdclass = {'bdist_wheel': bdist_wheel} if bdist_wheel is not None else dict()
+
+# Copy dlls in ./dist/python/mitsuba
 for file in list(glob.glob("./dist/*.dll")):
 	shutil.copy2(file,"./dist/python/mitsuba")
+	
+# Setup	
 setup(
     name=libname,
     version="0.0.1",
@@ -20,5 +37,6 @@ setup(
 	package_dir={'mitsuba': "./dist/python/mitsuba","enoki":"./dist/python/enoki"},
     package_data={"mitsuba": ["*.pyd","*.dll"], "enoki": ["*.pyd"]},
     install_requires=["numpy", "scipy"],
+	cmdclass=cmdclass,
 	
 )
