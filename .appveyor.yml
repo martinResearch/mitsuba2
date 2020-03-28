@@ -57,3 +57,25 @@ install:
     $env:PYTHONHOME = "$env:MINICONDA"
     conda update -y -q conda
     conda install -y -q pytest numpy scipy
+
+- cmd: C:\cuda.exe %arguments%
+- set CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v%CUDA_VERSION%
+- set PATH=%CUDA_PATH%\bin;%PATH%
+- nvcc -V
+ 
+build_script:
+
+- cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+- cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .
+- cmd: set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%
+- cmd: pip wheel . --wheel-dir=wheelhouse --no-deps
+- cmd: pip install twine
+- cmd: twine upload wheelhouse/*
+
+
+
+artifacts:
+- path: "wheelhouse\\*.whl"
+  name: Wheels
+
