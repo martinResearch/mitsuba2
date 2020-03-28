@@ -50,11 +50,3 @@ init:
         '10.1' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
       }
 
-install:
-- ps: |
-  git submodule -q update --init --recursive
-- ps: |
-    $env:PATH = "$env:MINICONDA;$env:MINICONDA\Scripts;$env:PATH"
-    $env:PYTHONHOME = "$env:MINICONDA"
-    conda update -y -q conda
-    conda install -y -q pytest numpy scipy
