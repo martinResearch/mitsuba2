@@ -15,10 +15,15 @@ environment:
     - PYTHON_VERSION: 3.7
       MINICONDA: C:\Miniconda37-x64
       BUILD_MODE: Release
+      CUDA_VERSION: '9.2'
     - PYTHON_VERSION: 3.6
       MINICONDA: C:\Miniconda36-x64
       BUILD_MODE: Release
+      CUDA_VERSION: '9.2'
   fast_finish: true
+  TWINE_REPOSITORY_URL:  https://upload.pypi.org/legacy/
+  TWINE_USERNAME: __token__
+
 install:
 - ps: |
     git submodule -q update --init --recursive
@@ -27,6 +32,49 @@ install:
       $env:PYTHONHOME = "$env:MINICONDA"
       conda update -y -q conda
       conda install -y -q pytest numpy scipy
+
+  appveyor DownloadFile -Url https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda_9.2.148_win10  -FileName C:\cuda.exe
+  
+init:
+  - ps: systeminfo /fo csv | ConvertFrom-Csv | select OS*, System* | Format-List
+  - echo %APPVEYOR_BUILD_WORKER_IMAGE%
+  - echo %generator%
+  - echo %config%
+  - ps: >-
+      $env:url = switch ( $env:cuda_version )
+      {
+        '6.5' { "https://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_6.5.14_windows_general_64.exe" }
+        '7.0' { "https://developer.download.nvidia.com/compute/cuda/7_0/Prod/local_installers/cuda_7.0.28_windows.exe" }
+        '7.5' { "https://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda_7.5.18_win10.exe" }
+        '8.0' { "https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_win10-exe" }
+        '9.0' { "https://developer.nvidia.com/compute/cuda/9.0/Prod/local_installers/cuda_9.0.176_win10-exe" }
+        '9.1' { "https://developer.nvidia.com/compute/cuda/9.1/Prod/local_installers/cuda_9.1.85_win10" }
+        '9.2' { "https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda_9.2.148_win10" }
+        '10.0' { "https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_411.31_win10" }
+        '10.1' { "https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe" }
+      }
+  - ps: >-
+      $env:arguments = switch ( $env:cuda_version )
+      {
+        '6.5' { "-s CUDAToolkit_$env:cuda_version" }
+        '7.0' { "-s CUDAToolkit_$env:cuda_version" }
+        '7.5' { "-s CUDAToolkit_$env:cuda_version" }
+        '8.0' { "-s compiler_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
+        '9.0' { "-s compiler_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
+        '9.1' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
+        '9.2' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
+        '10.0' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
+        '10.1' { "-s nvcc_$env:cuda_version cusparse_dev_$env:cuda_version cublas_dev_$env:cuda_version" }
+      }
+install:
+  - ps: appveyor DownloadFile -Url $env:url -FileName C:\cuda.exe
+  - C:\cuda.exe %arguments%
+  - set CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v%CUDA_VERSION%
+  - set PATH=%CUDA_PATH%\bin;%PATH%
+  - nvcc -V
+
+  
+  
 build_script:
 
 - cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
@@ -34,6 +82,9 @@ build_script:
 - cmd: set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%
 - cmd: pip wheel . --wheel-dir=wheelhouse --no-deps
+- cmd: pip install twine
+- cmd: twine upload wheelhouse/*
+
 
 
 artifacts:
