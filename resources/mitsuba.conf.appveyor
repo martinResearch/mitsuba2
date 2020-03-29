@@ -70,7 +70,7 @@
 
     "enabled": [
         # The "scalar_rgb" variant *must* be included at the moment.
-		"scalar_mono"
+		"scalar_mono",
         "scalar_rgb",
         "scalar_spectral",
 		"packet_mono",
