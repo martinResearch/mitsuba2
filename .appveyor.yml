@@ -64,6 +64,7 @@ install:
 build_script:
 
 - cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+- cmd: copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
 - cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .
 - cmd: set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%

@@ -1,5 +1,6 @@
 """Setup script for the mitsuba2 project."""
 
+import os
 from setuptools import setup  
 import glob
 import shutil
@@ -24,6 +25,10 @@ cmdclass = {'bdist_wheel': bdist_wheel} if bdist_wheel is not None else dict()
 for file in list(glob.glob("./dist/*.dll")):
 	shutil.copy2(file,"./dist/python/mitsuba")
 	
+os.makedirs("./dist/python/mitsuba/plugins", exist_ok=True)
+for file in list(glob.glob("./dist/plugins/*.dll")):
+	shutil.copy2(file,"./dist/python/mitsuba/plugins")
+	
 # Setup	
 setup(
     name=libname,
@@ -35,7 +40,7 @@ setup(
     license="",
     packages=["mitsuba","enoki"],
 	package_dir={'mitsuba': "./dist/python/mitsuba","enoki":"./dist/python/enoki"},
-    package_data={"mitsuba": ["*.pyd","*.dll"], "enoki": ["*.pyd"]},
+    package_data={"mitsuba": ["*.pyd","*.dll","plugins/*.dll"], "enoki": ["*.pyd"]},
     install_requires=["numpy", "scipy"],
 	cmdclass=cmdclass,
 	
