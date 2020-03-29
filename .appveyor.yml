@@ -1,6 +1,7 @@
 version: 1.0.{build}
 image:
-- Visual Studio 2019
+#- Visual Studio 2019
+- Unbuntu
 test: off
 skip_branch_with_pr: true
 platform:
@@ -30,7 +31,19 @@ install:
     conda install -y -q pytest numpy scipy
     
 build_script:
-
+#Linux
+- sh: sudo apt install clang-9 libc++-9-dev libc++abi-9-dev cmake ninja-build
+- sh: sudo apt install libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev
+- sh: sudo apt install python3-dev python3-distutils python3-setuptools
+- sh: export CC=clang-9
+- sh: export CXX=clang++-9
+- sh: mkdir build
+- sh: cd build
+- sh: cmake -GNinja .. 
+- sh: ninja
+- sh: cd ..
+- sh: pip wheel . --wheel-dir=wheelhouse --no-deps
+#Windows
 - cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
 - cmd: copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
 - cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
