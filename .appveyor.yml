@@ -34,7 +34,7 @@ install:
     
 build_script:
 #Linux
-- sh: sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe" #avoiding The following packages have unmet dependencies: mssql-server : Depends: libc++1
+- sh: sudo apt install libc++1
 - sh: sudo apt install clang-9 libc++-9-dev libc++abi-9-dev cmake ninja-build
 - sh: sudo apt install libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev
 - sh: sudo apt install python3-dev python3-distutils python3-setuptools
