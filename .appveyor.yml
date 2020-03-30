@@ -24,11 +24,13 @@ init:
 
 install:
 - ps: git submodule -q update --init --recursive
-- ps: |
-    $env:PATH = "$env:MINICONDA;$env:MINICONDA\Scripts;$env:PATH"
-    $env:PYTHONHOME = "$env:MINICONDA"
+- cmd: |
+    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+    set PYTHONHOME=%MINICONDA%
     conda update -y -q conda
     conda install -y -q pytest numpy scipy
+- sh: pip install pytest numpy scipy
+
     
 build_script:
 #Linux
