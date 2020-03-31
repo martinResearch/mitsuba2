@@ -44,9 +44,9 @@ build_script:
 - sh: pip3 install pytest numpy scipy
 - sh: sudo apt -y install python3-dev
 
-- sh: sudo apt purge --auto-remove cmake
+- sh: sudo apt -y purge --auto-remove cmake
 # getting cmake 3.9
-- sh: sudo apt-get purge cmake
+- sh: sudo apt-get -y purge cmake
 - sh: sudo apt -y install snapd
 - sh: sudo snap install cmake --classic #getting more recent cmake
 - sh: sudo apt install libc++1
