@@ -37,7 +37,7 @@ build_script:
 - sh: sudo apt install libc++1
 - sh: sudo apt-get -y install libc++-dev
 - sh: sudo apt install clang-9 
-- sh: sudo apt install libc++1-9
+- sh: sudo apt -y install libc++1-9
 - sh: sudo apt install libc++-9-dev 
 - sh: sudo apt install libc++abi-9-dev 
 - sh: sudo apt install cmake 
