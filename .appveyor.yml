@@ -36,7 +36,10 @@ build_script:
 #Linux
 
 - sh: sudo apt-get update
-- sh: sudo apt-get -y  install cmake
+- sh: sudo apt purge --auto-remove cmake
+# getting cmake 3.9
+- sh: sudo apt-get purge cmake
+- sh: sudo snap install cmake --classic
 - sh: sudo apt install libc++1
 - sh: sudo apt-get -y install libc++-dev
 - sh: sudo apt install clang-9 
