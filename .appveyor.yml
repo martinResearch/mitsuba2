@@ -1,7 +1,7 @@
 version: 1.0.{build}
 image:
 #- Visual Studio 2019
-- ubuntu
+- ubuntu1604
 test: off
 skip_branch_with_pr: true
 platform:
