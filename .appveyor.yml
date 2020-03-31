@@ -39,6 +39,7 @@ build_script:
 - sh: sudo apt purge --auto-remove cmake
 # getting cmake 3.9
 - sh: sudo apt-get purge cmake
+- sh: sudo apt install snapd
 - sh: sudo snap install cmake --classic
 - sh: sudo apt install libc++1
 - sh: sudo apt-get -y install libc++-dev
