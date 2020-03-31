@@ -13,7 +13,8 @@ environment:
   matrix:
   - PYTHON_VERSION: 3.7
     MINICONDA: C:\Miniconda37-x64
-    BUILD_MODE: Release    
+    BUILD_MODE: Release  
+
 
   fast_finish: true
   TWINE_REPOSITORY_URL:  https://upload.pypi.org/legacy/
@@ -29,8 +30,8 @@ install:
     set PYTHONHOME=%MINICONDA%
     conda update -y -q conda
     conda install -y -q pytest numpy scipy
-- sh: pip install pytest numpy scipy
-
+- sh: pip3 install pytest numpy scipy
+- sh: python3 --version
     
 build_script:
 #Linux
@@ -41,7 +42,7 @@ build_script:
 # getting cmake 3.9
 - sh: sudo apt-get purge cmake
 - sh: sudo apt -y install snapd
-- sh: sudo snap install cmake --classic
+- sh: sudo snap install cmake --classic #getting more recent cmake
 - sh: sudo apt install libc++1
 - sh: sudo apt-get -y install libc++-dev
 - sh: sudo apt install clang-9 
@@ -57,7 +58,7 @@ build_script:
 - sh: cmake -GNinja .. 
 - sh: ninja
 - sh: cd ..
-- sh: pip wheel . --wheel-dir=wheelhouse --no-deps
+- sh: pip3 wheel . --wheel-dir=wheelhouse --no-deps
 #Windows
 - cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
 - cmd: copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
