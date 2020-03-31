@@ -36,6 +36,7 @@ build_script:
 #Linux
 
 - sh: sudo apt-get update
+- sh: sudo apt -y install python3-dev
 - sh: sudo apt purge --auto-remove cmake
 # getting cmake 3.9
 - sh: sudo apt-get purge cmake
