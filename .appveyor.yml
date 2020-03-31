@@ -36,7 +36,11 @@ build_script:
 #Linux
 - sh: sudo apt install libc++1
 - sh: sudo apt-get install libc++-dev
-- sh: sudo apt install clang-9 libc++-9-dev libc++abi-9-dev cmake ninja-build
+- sh: sudo apt install clang-9 
+- sh: sudo apt install libc++-9-dev 
+- sh: sudo apt install libc++abi-9-dev 
+- sh: sudo apt install cmake 
+- sh: sudo apt install ninja-build
 - sh: sudo apt install libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev
 - sh: sudo apt install python3-dev python3-distutils python3-setuptools
 - sh: export CC=clang-9
