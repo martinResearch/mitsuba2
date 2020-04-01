@@ -37,7 +37,7 @@ build_script:
 #Linux
 - sh: find -iname "__init__.py"
 - sh: find -iname "*.so"
-- sh: sudo apt-get update && sudo apt-get upgrade -y
+- sh: sudo apt-get update 
 - sh: sudo apt-get install python3
 - sh: sudo apt-get -y install python3-pip
 - sh: python --version
