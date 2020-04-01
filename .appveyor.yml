@@ -60,18 +60,16 @@ build_script:
 - sh: sudo apt -y install libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev
 - sh: export CC=clang-9
 - sh: export CXX=clang++-9
-- sh: mkdir build
-- sh: cd build
-- sh: cmake -GNinja .. 
+- sh: cp .\resources\mitsuba.conf.appveyor .
+- sh: cmake -GNinja . 
 - sh: ninja
-- sh: cd ..
 - sh: find -iname "__init__.py"
 - sh: find -iname "*.so"
 - sh: pip3 wheel . --wheel-dir=wheelhouse --no-deps
 #Windows
 - cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
 - cmd: copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
-- cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
+- cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 ..  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
 - cmd: set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 - cmd: cmake --build . --config %BUILD_MODE% -- /v:m /m /logger:%MSBuildLogger%
 - cmd: pip wheel . --wheel-dir=wheelhouse --no-deps
