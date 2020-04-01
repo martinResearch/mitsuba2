@@ -35,7 +35,8 @@ install:
     
 build_script:
 #Linux
-
+- sh: find -iname "__init__.py"
+- sh: find -iname "*.so"
 - sh: sudo apt-get update && sudo apt-get upgrade -y
 - sh: sudo apt-get install python3
 - sh: sudo apt-get -y install python3-pip
@@ -64,6 +65,8 @@ build_script:
 - sh: cmake -GNinja .. 
 - sh: ninja
 - sh: cd ..
+- sh: find -iname "__init__.py"
+- sh: find -iname "*.so"
 - sh: pip3 wheel . --wheel-dir=wheelhouse --no-deps
 #Windows
 - cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
