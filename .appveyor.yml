@@ -10,12 +10,7 @@ build:
   parallel: true
 
 environment:
-  matrix:
-  - PYTHON_VERSION: 3.7
-    MINICONDA: C:\Miniconda37-x64
   
-
-
   fast_finish: true
   TWINE_REPOSITORY_URL:  https://upload.pypi.org/legacy/
   TWINE_USERNAME: __token__
@@ -60,6 +55,7 @@ build_script:
 - sh: pip3 wheel . --wheel-dir=wheelhouse --no-deps
 
 #Windows
+- cmd: set MINICONDA=C:\Miniconda37-x64
 - cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
 - cmd: copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
 - cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 ..  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
