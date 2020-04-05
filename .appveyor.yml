@@ -64,7 +64,7 @@ build_script:
 # Compile C++
 - cmd: |    
     copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
-    cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 ..  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
+    cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 .  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
     set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
     cmake --build . --config Release -- /v:m /m /logger:%MSBuildLogger%
 # Create wheel
