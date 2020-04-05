@@ -16,17 +16,8 @@ environment:
   TWINE_USERNAME: __token__
 
 
-
 install:
 - ps: git submodule -q update --init --recursive
-- cmd: |
-    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
-    set PYTHONHOME=%MINICONDA%
-    conda update -y -q conda
-    conda install -y -q pytest numpy scipy
-
-    
-build_script:
 
 #Linux
 # Getting python 3 and python dependencies
@@ -46,6 +37,19 @@ build_script:
 - sh: sudo apt -y install clang-9 libc++1-9 libc++-9-dev libc++abi-9-dev  ninja-build
 # Install libraries for image I/O and the graphical user interface 
 - sh: sudo apt -y install libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev
+
+#Windows
+- cmd: |
+    set MINICONDA=C:\Miniconda37-x64
+    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+    set PYTHONHOME=%MINICONDA%
+    conda update -y -q conda
+    conda install -y -q pytest numpy scipy
+    
+build_script:
+
+#Linux
 # Compile C++
 - sh: |
     export CC=clang-9
@@ -57,19 +61,14 @@ build_script:
 - sh: pip3 wheel . --wheel-dir=wheelhouse --no-deps
 
 #Windows
-- cmd: |
-    set MINICONDA=C:\Miniconda37-x64
-    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
-    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
-    set PYTHONHOME=%MINICONDA%
-    conda update -y -q conda
-    conda install -y -q pytest numpy scipy
+# Compile C++
+- cmd: |    
     copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
     cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 ..  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
     set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
     cmake --build . --config Release -- /v:m /m /logger:%MSBuildLogger%
-    pip wheel . --wheel-dir=wheelhouse --no-deps
-
+# Create wheel
+- cmd: pip wheel . --wheel-dir=wheelhouse --no-deps
 
 artifacts:
 - path: "wheelhouse\\*.whl"
