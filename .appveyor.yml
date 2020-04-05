@@ -15,7 +15,6 @@ environment:
   TWINE_REPOSITORY_URL:  https://upload.pypi.org/legacy/
   TWINE_USERNAME: __token__
 
-init:
 
 
 install:
@@ -31,39 +30,46 @@ build_script:
 
 #Linux
 # Getting python 3 and python dependencies
-- sh: sudo apt-get update 
-- sh: sudo apt-get install python3
-- sh: sudo apt-get -y install python3-pip
-- sh: pip3 install pytest numpy scipy
-- sh: sudo apt -y install python3-dev
+- sh: |
+    sudo apt-get update 
+    sudo apt-get install python3
+    sudo apt-get -y install python3-pip
+    pip3 install pytest numpy scipy
+    sudo apt -y install python3-dev
 # Getting cmake 3.9
-- sh: sudo apt -y purge --auto-remove cmake
-- sh: sudo apt-get -y purge cmake
-- sh: sudo apt -y install snapd
-- sh: sudo snap install cmake --classic 
+- sh: |
+    sudo apt -y purge --auto-remove cmake
+    sudo apt-get -y purge cmake
+    sudo apt -y install snapd
+    sudo snap install cmake --classic 
 # Getting C++ dependencies
-- sh: sudo apt -y install libc++1 libc++-dev clang-9 libc++1-9 libc++-9-dev libc++abi-9-dev  ninja-build
+- sh: sudo apt -y install clang-9 libc++1-9 libc++-9-dev libc++abi-9-dev  ninja-build
 # Install libraries for image I/O and the graphical user interface 
 - sh: sudo apt -y install libz-dev libpng-dev libjpeg-dev libxrandr-dev libxinerama-dev libxcursor-dev
 # Compile C++
-- sh: export CC=clang-9
-- sh: export CXX=clang++-9
-- sh: cp ./resources/mitsuba.conf.appveyor .
-- sh: cmake -GNinja . 
-- sh: ninja
+- sh: |
+    export CC=clang-9
+    export CXX=clang++-9
+    cp ./resources/mitsuba.conf.appveyor .
+    cmake -GNinja . 
+    ninja
 # Create wheel
 - sh: pip3 wheel . --wheel-dir=wheelhouse --no-deps
 
 #Windows
-- cmd: set MINICONDA=C:\Miniconda37-x64
-- cmd: set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
-- cmd: copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
-- cmd: cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 ..  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
-- cmd: set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-- cmd: cmake --build . --config Release -- /v:m /m /logger:%MSBuildLogger%
-- cmd: pip wheel . --wheel-dir=wheelhouse --no-deps
-#- cmd: pip install twine
-#- cmd: twine upload wheelhouse/*
+- cmd: |
+    set MINICONDA=C:\Miniconda37-x64
+    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+    set PATH=%MINICONDA%;%MINICONDA%\Scripts;%PATH%
+    set PYTHONHOME=%MINICONDA%
+    conda update -y -q conda
+    conda install -y -q pytest numpy scipy
+    copy .\resources\mitsuba.conf.appveyor .\mitsuba.conf
+    cmake -G "Visual Studio 16 2019" -A "x64" -DCMAKE_SUPPRESS_REGENERATION=1 ..  -DMTS_OPTIX_PATH="C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.5.0"
+    set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    cmake --build . --config Release -- /v:m /m /logger:%MSBuildLogger%
+    pip wheel . --wheel-dir=wheelhouse --no-deps
+
 
 artifacts:
 - path: "wheelhouse\\*.whl"
